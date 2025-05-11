@@ -1,0 +1,280 @@
+class Cliente:
+    def __init__(self, id:int, nome:str, idade:int, cpf:str, telefone:str, email:str) -> None:
+        self.id = id
+        self.nome = nome
+        self.idade = idade
+        self.cpf = cpf
+        self.telefone = telefone
+        self.email = email
+
+class Quarto:
+    def __init__(self, id:int, nome:str, valor:float) -> None:
+        self.id = id
+        self.nome = nome
+        self.valor = valor
+        self.disponibilidade = True
+
+class Reserva:
+    def __init__(self, id:int, data_entrada:str, id_quarto:int, id_cliente:int, data_saida:str) -> None:
+        self.id = id
+        self.data_entrada = data_entrada
+        self.id_quarto = id_quarto
+        self.id_cliente = id_cliente
+        self.data_saida = data_saida
+
+class Hotel:
+    def __init__(self, nome:str) -> None:
+        self.nome = nome
+        self.lista_de_clientes = []
+        self.lista_de_quartos = []
+        self.lista_de_reservas = []
+        self.historico_de_reservas = []
+        self.id_clientes = 1
+        self.id_quartos = 1
+        self.id_reservas = 1
+    
+    def cadastrar_Cliente(self):
+        nome = input("Digite o nome do cliente: ")
+        idade = int(input("Digite a idade do cliente: "))
+        cpf = input("Digite o CPF do cliente: ")
+        telefone = input("Digite o telefone do cliente: ")
+        email = input("Digite o email do cliente: ")
+        cliente = Cliente(id=self.id_clientes, nome=nome, cpf=cpf, idade=idade, telefone=telefone, email=email)
+        self.id_clientes += 1
+        self.lista_de_clientes.append(cliente)
+        return "Cliente cadastrado com sucesso."
+    
+    def ver_Clientes(self):
+        for cliente_da_vez in self.lista_de_clientes:
+            print(f"""
+            ID: {cliente_da_vez.id}
+            Nome: {cliente_da_vez.nome}
+            CPF: {cliente_da_vez.cpf}
+            Idade: {cliente_da_vez.idade}
+            Telefone: {cliente_da_vez.telefone}
+            E-mail: {cliente_da_vez.email}
+            """)
+
+    def editar_Cliente(self):
+        id_cliente = int(input("Digite o ID do cliente que você deseja editar: "))
+        cliente_encontrado = False
+        for cliente_da_vez in self.lista_de_clientes:
+            if cliente_da_vez.id == id_cliente:
+                cliente_encontrado = True
+                nome = input("Digite o novo nome do cliente: ")
+                idade = int(input("Digite a nova idade do cliente: "))
+                cpf = input("Digite o novo CPF do cliente: ")
+                telefone = input("Digite o novo telefone do cliente: ")
+                email = input("Digite o novo email do cliente: ")
+                cliente_da_vez.nome = nome
+                cliente_da_vez.idade = idade
+                cliente_da_vez.cpf = cpf
+                cliente_da_vez.telefone = telefone
+                cliente_da_vez.email = email
+                return "Cliente atualizado com sucesso"
+        if cliente_encontrado == False:
+            return "Cliente não encontrado"
+
+    def remover_Cliente(self):
+        id_cliente = int(input("Digite o ID do cliente que você deseja remover: "))
+        cliente_encontrado = False
+        for cliente_da_vez in self.lista_de_clientes:
+            if cliente_da_vez.id == id_cliente:
+                cliente_encontrado = True
+                self.lista_de_clientes.remove(cliente_da_vez)
+                return "Cliente removido com sucesso"
+
+        if cliente_encontrado == False:
+            return "Cliente não encontrado"
+            
+    def cadastrar_Quarto(self):
+        nome = input("Digite o nome do quarto: ")
+        valor = float(input("Digite a valor do quarto: "))
+        quarto = Quarto(id=self.id_quartos, nome=nome, valor=valor)
+        self.id_quartos += 1
+        self.lista_de_quartos.append(quarto)
+        return "Quarto criado com sucesso."
+
+    def ver_Quartos(self):
+        for quarto_da_vez in self.lista_de_quartos:
+            print(f"""
+            ID: {quarto_da_vez.id}
+            Nome: {quarto_da_vez.nome}
+            Valor: R${quarto_da_vez.valor}
+            Disponibilidade: {quarto_da_vez.disponibilidade}
+            """)
+
+    def editar_Quarto(self):
+        id_quarto = int(input("Digite o ID do quarto que você deseja editar: "))
+        quarto_encontrado = False
+        for quarto_da_vez in self.lista_de_quartos:
+            if quarto_da_vez.id == id_quarto:
+                quarto_encontrado = True
+                while True:
+                    menu_editar_quarto = input("""
+                    O que você quer editar:
+                    1 - Nome
+                    2 - Valor
+                    0 - Voltar
+                    """)
+                    match menu_editar_quarto:
+                        case "1":
+                            novo_nome = input("Digite o novo nome do quarto: ")
+                            quarto_da_vez.nome = novo_nome
+                        case "2":
+                            novo_valor = float(input("Digite o novo valor do quarto: "))
+                            quarto_da_vez.valor = novo_valor
+                        case "0":
+                            return "Quarto atualizado com sucesso"
+                        case _:
+                            print("Opção inválida")
+
+        if quarto_encontrado == False:
+            return "Quarto não encontrado"
+        
+    def remover_Quarto(self):
+        id_quarto = int(input("Digite o ID do quarto que você deseja remover: "))
+        quarto_encontrado = False
+        for quarto_da_vez in self.lista_de_quartos:
+            if quarto_da_vez.id == id_quarto:
+                quarto_encontrado = True
+                self.lista_de_quartos.remove(quarto_da_vez)
+                return "Quarto removido com sucesso"
+
+        if quarto_encontrado == False:
+            return "Quarto não encontrado"
+        
+    def fazer_Reserva(self):
+        data_entrada = input("Digite a data de entrada da reserva: ")
+        data_saida = input("Digite a data de saida da reserva: ")
+        for quarto_da_vez in self.lista_de_quartos:
+            print(f"""ID: {quarto_da_vez.id} -  Nome:{quarto_da_vez.nome}""")
+            id_quarto = int(input("Digite o ID do quarto da reserva: "))
+        for quarto_da_vez in self.lista_de_quartos:
+            if quarto_da_vez.id == id_quarto and quarto_da_vez.disponibilidade == True:
+                for cliente_da_vez in self.lista_de_clientes:
+                    print(f"""ID: {cliente_da_vez.id}-    Nome: {cliente_da_vez.nome}""")
+                id_cliente = int(input("Digite o ID do cliente da reserva: "))
+                for cliente_da_vez in self.lista_de_clientes:
+                    if cliente_da_vez.id == id_cliente:
+                        quarto_da_vez.disponibilidade = False
+                        reserva = Reserva(id=self.id_reservas, data_entrada=data_entrada, data_saida=data_saida, id_quarto=id_quarto, id_cliente=id_cliente)
+                        self.id_reservas += 1
+                        self.lista_de_reservas.append(reserva)
+                        self.historico_de_reservas.append(reserva)
+                        return f"Reserva do quarto {quarto_da_vez.nome} realizada com sucesso para o cliente {cliente_da_vez.nome}"
+                return "Cliente não encontrado"
+            elif quarto_da_vez.id == id_quarto and quarto_da_vez.disponibilidade == False:
+                return "Este quarto não está disponível"
+        return "Quarto não encontrado"
+    
+
+    def ver_Quartos_Reservados(self):
+        for quarto_da_vez in self.lista_de_quartos:
+            if quarto_da_vez.disponibilidade == False:
+                print(f"""
+                ID: {quarto_da_vez.id}
+                Nome: {quarto_da_vez.nome}
+                Valor: R${quarto_da_vez.valor}
+                Disponibilidade: {quarto_da_vez.disponibilidade}
+                """)
+
+    def ver_Quartos_Disponiveis(self):
+        for quarto_da_vez in self.lista_de_quartos:
+            if quarto_da_vez.disponibilidade == True:
+                print(f"""
+                ID: {quarto_da_vez.id}
+                Nome: {quarto_da_vez.nome}
+                Valor: R${quarto_da_vez.valor}
+                Disponibilidade: {quarto_da_vez.disponibilidade}
+                """)
+
+    def encerrar_Reserva(self):
+        id_reserva = int(input("Digite o ID da reserva que você deseja encerrar: "))
+        for reserva_da_vez in self.lista_de_reservas:
+            if reserva_da_vez.id == id_reserva:
+                for quarto_da_vez in self.lista_de_quartos:
+                    if quarto_da_vez.id == reserva_da_vez.id_quarto:
+                        quarto_da_vez.disponibilidade = True
+                        self.lista_de_reservas.remove(reserva_da_vez)
+                        return "Reserva encerrada."
+        return "Reserva não encontrada"
+
+hotel1 = Hotel(nome="Hotel Refugio dos Sonhos")
+
+while True:
+    menu = input("""
+    Escolha uma opção:
+    1 - Ver Quartos disponiveis
+    2 - Ver Quartos reservados
+    3 - Fazer uma Reserva
+    4 - Encerrar uma Reversa
+    5 - Gerenciar Clientes
+    6 - Gerenciar Quartos
+    0 - Sair
+    
+    Digite a opão desejada:
+    """)
+
+    match menu:
+        case "1":
+            hotel1.ver_Quartos_Disponiveis()
+        case "2":
+            hotel1.ver_Quartos_Reservados()
+        case "3":
+            print(hotel1.fazer_Reserva())
+        case "4":
+            print(hotel1.encerrar_Reserva())
+        case "5":
+            while True:
+                menu_cliente = input("""
+                    Escolha uma opção:
+                    1 - Adicionar Cliente
+                    2 - Ver todos os Clientes
+                    3 - Editar Cliente
+                    4 - Excluir Cliente
+                    0 - Voltar
+                    """)
+                match menu_cliente:
+                    case "1":
+                        print(hotel1.cadastrar_Cliente())
+                    case "2":
+                        hotel1.ver_Clientes()
+                    case "3":
+                        print(hotel1.editar_Cliente())
+                    case "4":
+                        print(hotel1.remover_Cliente())
+                    case "0":
+                        print("Voltando ao menu principal")
+                        break
+                    case _:
+                        print("Opção Inválida")
+        case "6":
+            while True:
+                menu_quarto = input("""
+                    Escolha uma opção:
+                    1 - Adicionar Quarto
+                    2 - Ver todos os Quartos
+                    3 - Editar Quarto
+                    4 - Excluir Quarto
+                    0 - Voltar
+                    """)
+                match menu_quarto:
+                    case "1":
+                        print(hotel1.cadastrar_Quarto())
+                    case "2":
+                        hotel1.ver_Quartos()
+                    case "3":
+                        print(hotel1.editar_Quarto())
+                    case "4":
+                        print(hotel1.remover_Quarto())
+                    case "0":
+                        print("Voltando ao menu principal")
+                        break
+                    case _:
+                        print("Opção Inválida")
+        case "0":
+            print("Fim do Programa")
+            break
+        case _:
+            print("Opção inválida")    
